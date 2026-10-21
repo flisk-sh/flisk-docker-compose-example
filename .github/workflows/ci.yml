@@ -26,7 +26,7 @@ jobs:
       - name: Install Tilt
         run: curl -fsSL https://raw.githubusercontent.com/tilt-dev/tilt/master/scripts/install.sh | bash
       - name: Install TDK
-        run: npm install --global @tdk-landscape/tdk-cli-core@latest
+        run: npm install --global @flisk-sh/flisk@latest
       - name: Run tdk doctor
         run: tdk doctor --no-ping
 
