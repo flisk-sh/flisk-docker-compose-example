@@ -1,6 +1,6 @@
 # TDK Docker Compose example
 
-Run [TDK CLI](https://github.com/tdk-landscape/tdk-cli-core) from Docker Compose without installing the binary on your host.
+Run [TDK CLI](https://github.com/flisk-sh/flisk) from Docker Compose without installing the binary on your host.
 
 ## Quick start
 
@@ -57,4 +57,4 @@ docker compose run --rm tdk tdk project --check
 
 ---
 
-⭐ **Using TDK?** [Star tdk-cli-core](https://github.com/tdk-landscape/tdk-cli-core) so other developers can find it.
+⭐ **Using TDK?** [Star tdk-cli-core](https://github.com/flisk-sh/flisk) so other developers can find it.
