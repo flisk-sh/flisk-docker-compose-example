@@ -1,25 +1,25 @@
-# TDK Docker Compose example
+# Flisk Docker Compose example
 
-Run [TDK CLI](https://github.com/flisk-sh/flisk) from Docker Compose without installing the binary on your host.
+Run [Flisk CLI](https://github.com/flisk-sh/flisk) from Docker Compose without installing the binary on your host.
 
 ## Quick start
 
 ```sh
-docker compose run --rm tdk tdk --version
-docker compose run --rm tdk tdk project --yes
-printf "\n" | docker compose run --rm -T tdk tdk resource database --type backend --stack pre-alpha --path services/pre-alpha/database
-printf "\n" | docker compose run --rm -T tdk tdk resource api --type backend --stack pre-alpha --path services/pre-alpha/api
-docker compose run --rm tdk tdk project --check
+docker compose run --rm flisk flisk --version
+docker compose run --rm flisk flisk project --yes
+printf "\n" | docker compose run --rm -T flisk flisk resource database --type backend --stack pre-alpha --path services/pre-alpha/database
+printf "\n" | docker compose run --rm -T flisk flisk resource api --type backend --stack pre-alpha --path services/pre-alpha/api
+docker compose run --rm flisk flisk project --check
 ```
 
 The working directory is mounted into the container at `/workspace`, so generated files appear in this repo.
 
 ## Add a dependency
 
-TDK/Tilt reads service boot order from `internalDependencies` in `service.json`.
+Flisk/Tilt reads service boot order from `internalDependencies` in `service.json`.
 
 ```sh
-docker compose run --rm -T tdk sh -lc 'node -e "
+docker compose run --rm -T flisk sh -lc 'node -e "
 const fs = require(\"fs\");
 const file = \"services/pre-alpha/api/service.json\";
 const service = JSON.parse(fs.readFileSync(file, \"utf8\"));
@@ -27,7 +27,7 @@ service.internalDependencies = [\"database\"];
 fs.writeFileSync(file, JSON.stringify(service, null, 2) + \"\\n\");
 "'
 
-docker compose run --rm tdk tdk project --check
+docker compose run --rm flisk flisk project --check
 ```
 
 The important bit in `services/pre-alpha/api/service.json`:
@@ -46,15 +46,15 @@ The important bit in `services/pre-alpha/api/service.json`:
 Install Tilt on the host if you want to run the generated stack directly:
 
 ```sh
-tdk up pre-alpha
+flisk up pre-alpha
 ```
 
 For container-only smoke testing, validate the generated project instead:
 
 ```sh
-docker compose run --rm tdk tdk project --check
+docker compose run --rm flisk flisk project --check
 ```
 
 ---
 
-⭐ **Using TDK?** [Star tdk-cli-core](https://github.com/flisk-sh/flisk) so other developers can find it.
+⭐ **Using Flisk?** [Star tdk-cli-core](https://github.com/flisk-sh/flisk) so other developers can find it.

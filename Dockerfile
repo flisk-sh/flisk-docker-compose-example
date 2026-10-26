@@ -8,4 +8,4 @@ RUN curl -fsSL https://flisk.sh/install.sh | sh
 
 WORKDIR /workspace
 
-CMD ["tdk", "--help"]
+CMD ["flisk", "--help"]

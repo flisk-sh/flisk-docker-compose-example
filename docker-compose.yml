@@ -1,5 +1,5 @@
 services:
-  tdk:
+  flisk:
     build:
       context: .
     working_dir: /workspace

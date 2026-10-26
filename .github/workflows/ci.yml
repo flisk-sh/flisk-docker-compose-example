@@ -10,12 +10,12 @@ permissions:
   contents: read
 
 concurrency:
-  group: tdk-ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  group: flisk-ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
   doctor:
-    name: 🩺 TDK doctor
+    name: 🩺 Flisk doctor
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -25,10 +25,10 @@ jobs:
           node-version: 22
       - name: Install Tilt
         run: curl -fsSL https://raw.githubusercontent.com/tilt-dev/tilt/master/scripts/install.sh | bash
-      - name: Install TDK
+      - name: Install Flisk
         run: npm install --global @flisk-sh/flisk@latest
-      - name: Run tdk doctor
-        run: tdk doctor --no-ping
+      - name: Run flisk doctor
+        run: flisk doctor --no-ping
 
   e2e:
     name: 🐳 Docker Compose project setup E2E
@@ -36,15 +36,15 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
-      - name: Build the TDK container
-        run: docker compose build tdk
-      - name: Verify TDK runs in Docker Compose
-        run: docker compose run --rm tdk tdk --version
+      - name: Build the Flisk container
+        run: docker compose build flisk
+      - name: Verify Flisk runs in Docker Compose
+        run: docker compose run --rm flisk flisk --version
       - name: Generate a project and resources in the mounted workspace
         shell: bash
         run: |
-          docker compose run --rm tdk tdk project --yes
-          printf '\n' | docker compose run --rm -T tdk tdk resource database --type backend --stack pre-alpha --path services/pre-alpha/database
-          printf '\n' | docker compose run --rm -T tdk tdk resource api --type backend --stack pre-alpha --path services/pre-alpha/api
+          docker compose run --rm flisk flisk project --yes
+          printf '\n' | docker compose run --rm -T flisk flisk resource database --type backend --stack pre-alpha --path services/pre-alpha/database
+          printf '\n' | docker compose run --rm -T flisk flisk resource api --type backend --stack pre-alpha --path services/pre-alpha/api
       - name: Verify generated project configuration
-        run: docker compose run --rm tdk tdk project --check
+        run: docker compose run --rm flisk flisk project --check
