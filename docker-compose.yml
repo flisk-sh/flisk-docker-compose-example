@@ -6,5 +6,5 @@ services:
     volumes:
       - .:/workspace
     environment:
-      TDK_INSTALL_DIR: /usr/local/bin
+      FLISK_INSTALL_DIR: /usr/local/bin
 
