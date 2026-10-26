@@ -57,4 +57,4 @@ docker compose run --rm flisk flisk project --check
 
 ---
 
-⭐ **Using Flisk?** [Star tdk-cli-core](https://github.com/flisk-sh/flisk) so other developers can find it.
+⭐ **Using Flisk?** [Star flisk-cli-core](https://github.com/flisk-sh/flisk) so other developers can find it.
