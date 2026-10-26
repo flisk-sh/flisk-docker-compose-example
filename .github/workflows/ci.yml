@@ -44,6 +44,9 @@ jobs:
         shell: bash
         run: |
           docker compose run --rm flisk flisk project --yes
+          # The container runs as root, so the generated .env is root-owned and
+          # docker compose cannot read it on the host for the next command.
+          sudo chown -R "$(id -u):$(id -g)" .
           printf '\n' | docker compose run --rm -T flisk flisk resource database --type backend --stack pre-alpha --path services/pre-alpha/database
           printf '\n' | docker compose run --rm -T flisk flisk resource api --type backend --stack pre-alpha --path services/pre-alpha/api
       - name: Verify generated project configuration

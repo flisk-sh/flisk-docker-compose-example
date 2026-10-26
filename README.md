@@ -12,7 +12,7 @@ printf "\n" | docker compose run --rm -T flisk flisk resource api --type backend
 docker compose run --rm flisk flisk project --check
 ```
 
-The working directory is mounted into the container at `/workspace`, so generated files appear in this repo.
+The working directory is mounted into the container at `/workspace`, so generated files appear in this repo. The container runs as root, so on Linux run `sudo chown -R "$USER" .` after `flisk project --yes` to make the generated `.env` readable by `docker compose` on the host.
 
 ## Add a dependency
 
