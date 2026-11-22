@@ -2,7 +2,8 @@ import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 
 // The source repo was renamed to flisk; stale link text sends readers to a 404.
-const STALE = 'flisk-cli-core';
+// The old name is assembled from parts so this script does not flag itself.
+const STALE = ['flisk', 'cli', 'core'].join('-');
 const files = execFileSync('git', ['ls-files', '-z'], { encoding: 'utf8' })
   .split('\0')
   .filter(Boolean);
