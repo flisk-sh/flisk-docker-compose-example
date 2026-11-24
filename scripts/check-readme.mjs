@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process';
-import { accessSync, constants, readFileSync } from 'node:fs';
+import { accessSync, constants, readFileSync, statSync } from 'node:fs';
 import { delimiter, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -8,12 +8,15 @@ import { fileURLToPath } from 'node:url';
 const STALE = ['flisk', 'cli', 'core'].join('-');
 const root = fileURLToPath(new URL('../', import.meta.url));
 // Resolve git to an absolute path so the lookup never picks up a writeable PATH entry.
+// A directory named "git" satisfies X_OK, so require a regular file; on Windows the
+// binary is git.exe.
+const gitNames = process.platform === 'win32' ? ['git.exe', 'git'] : ['git'];
 const git = (process.env.PATH || '').split(delimiter)
-  .map((dir) => join(dir, 'git'))
+  .flatMap((dir) => gitNames.map((name) => join(dir, name)))
   .find((candidate) => {
     try {
       accessSync(candidate, constants.X_OK);
-      return true;
+      return statSync(candidate).isFile();
     } catch {
       return false;
     }
@@ -22,7 +25,12 @@ if (!git) {
   console.error('no git executable found on PATH');
   process.exit(1);
 }
-const files = execFileSync(git, ['ls-files', '-z'], { cwd: root, encoding: 'utf8' })
+// Large trees can push git ls-files past the 1 MiB default maxBuffer.
+const files = execFileSync(git, ['ls-files', '-z'], {
+  cwd: root,
+  encoding: 'utf8',
+  maxBuffer: 32 * 1024 * 1024,
+})
   .split('\0')
   .filter(Boolean);
 const hits = [];
@@ -33,6 +41,8 @@ for (const file of files) {
   } catch {
     continue;
   }
+  // Binary blobs are not link text; a NUL byte marks them without an extension list.
+  if (text.includes('\0')) continue;
   text.split(/\r?\n/).forEach((line, index) => {
     if (line.includes(STALE)) hits.push(`${file}:${index + 1} mentions ${STALE}`);
   });
